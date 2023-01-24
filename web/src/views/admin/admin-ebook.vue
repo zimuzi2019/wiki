@@ -1,11 +1,11 @@
 <template>
   <div class="about">
-    <h1>关于我们</h1>
+    <h1>电子书管理</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: "About"
+  name: "AdminEbook"
 }
 </script>
