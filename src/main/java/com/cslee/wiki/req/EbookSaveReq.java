@@ -1,6 +1,6 @@
-package com.cslee.wiki.resp;
+package com.cslee.wiki.req;
 
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
 
     private String name;

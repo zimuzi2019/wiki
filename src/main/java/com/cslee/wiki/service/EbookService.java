@@ -3,8 +3,9 @@ package com.cslee.wiki.service;
 import com.cslee.wiki.domain.Ebook;
 import com.cslee.wiki.domain.EbookExample;
 import com.cslee.wiki.mapper.EbookMapper;
-import com.cslee.wiki.req.EbookReq;
-import com.cslee.wiki.resp.EbookResp;
+import com.cslee.wiki.req.EbookQueryReq;
+import com.cslee.wiki.req.EbookSaveReq;
+import com.cslee.wiki.resp.EbookQueryResp;
 import com.cslee.wiki.resp.PageResp;
 import com.cslee.wiki.util.CopyUtil;
 import com.github.pagehelper.PageHelper;
@@ -24,7 +25,7 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq ebookReq){
+    public PageResp<EbookQueryResp> list(EbookQueryReq ebookReq){
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(ebookReq.getName())) {
@@ -48,12 +49,29 @@ public class EbookService {
         //}
 
         //列表复制
-        List<EbookResp> respList = CopyUtil.copyList(ebookList, EbookResp.class);
+        List<EbookQueryResp> respList = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(respList);
 
         return pageResp;
+    }
+
+
+
+    /**
+     * 保存
+     */
+    public void save(EbookSaveReq ebookSaveReq) {
+        Ebook ebook = CopyUtil.copy(ebookSaveReq, Ebook.class);
+
+        if (ObjectUtils.isEmpty(ebookSaveReq.getId())) {
+            // 新增
+            ebookMapper.insert(ebook);
+        } else {
+            // 更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }
