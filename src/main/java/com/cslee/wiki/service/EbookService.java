@@ -5,6 +5,7 @@ import com.cslee.wiki.domain.EbookExample;
 import com.cslee.wiki.mapper.EbookMapper;
 import com.cslee.wiki.req.EbookReq;
 import com.cslee.wiki.resp.EbookResp;
+import com.cslee.wiki.resp.PageResp;
 import com.cslee.wiki.util.CopyUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -23,14 +24,14 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public List<EbookResp> list(EbookReq ebookReq){
+    public PageResp<EbookResp> list(EbookReq ebookReq){
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(ebookReq.getName())) {
             criteria.andNameLike("%" + ebookReq.getName() + "%");
         }
 
-        PageHelper.startPage(1, 2);
+        PageHelper.startPage(ebookReq.getPage(), ebookReq.getSize());
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
@@ -46,8 +47,13 @@ public class EbookService {
         //    respList.add(ebookResp);
         //}
 
+        //列表复制
         List<EbookResp> respList = CopyUtil.copyList(ebookList, EbookResp.class);
 
-        return respList;
+        PageResp<EbookResp> pageResp = new PageResp<>();
+        pageResp.setTotal(pageInfo.getTotal());
+        pageResp.setList(respList);
+
+        return pageResp;
     }
 }
