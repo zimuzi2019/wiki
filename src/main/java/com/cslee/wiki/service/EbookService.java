@@ -8,6 +8,7 @@ import com.cslee.wiki.req.EbookSaveReq;
 import com.cslee.wiki.resp.EbookQueryResp;
 import com.cslee.wiki.resp.PageResp;
 import com.cslee.wiki.util.CopyUtil;
+import com.cslee.wiki.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -24,6 +25,9 @@ public class EbookService {
 
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq ebookReq){
         EbookExample ebookExample = new EbookExample();
@@ -68,7 +72,8 @@ public class EbookService {
 
         if (ObjectUtils.isEmpty(ebookSaveReq.getId())) {
             // 新增
-            ebookMapper.insert(ebook);
+            ebook.setId(snowFlake.nextId());
+            ebookMapper.insertSelective(ebook);
         } else {
             // 更新
             ebookMapper.updateByPrimaryKey(ebook);
