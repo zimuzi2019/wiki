@@ -289,6 +289,9 @@
       const handleDelete = (id: number) => {
         // console.log(level1, level1.value, id)
         getDeleteIds(level1.value, id);
+        // 清空数组，否则多次删除时，数组会一直增加
+        deleteIds.length = 0;
+        deleteNames.length = 0;
         //console.log(ids)
 
         Modal.confirm({
